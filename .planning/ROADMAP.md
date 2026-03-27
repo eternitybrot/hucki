@@ -1,312 +1,201 @@
-# Hucki v1 Roadmap
+# Hucki - Development Roadmap
 
+**Milestone:** v1.0 Comprehensive
+**Version:** 2.0 (Feature Parity with AnythingLLM)
+**Status:** Planning Complete
 **Created:** 2026-03-27
-**Target:** v1.0 Launch
-**Strategy:** Coarse granularity (5 phases, vertical slices)
-
----
-
-## Roadmap Overview
-
-**5 phases** | **24 requirements** | All v1 requirements covered ✓
-
-This roadmap builds Hucki incrementally—each phase delivers a working vertical slice that can be tested end-to-end.
 
 ---
 
 ## Phases
 
-| # | Phase | Goal | Requirements | Success Criteria |
-|---|-------|------|--------------|------------------|
-| 1 | Foundation | Core API + workspace management working | WS-01 to WS-04, HLT-01 to HLT-04 | Can create/list/delete workspaces via API |
-| 2 | Embedding Pipeline | Document indexing + vector storage working | IDX-01 to IDX-06 | Can index docs and store in Convex |
-| 3 | Retrieval Engine | Query interface + vector search working | QRY-01, QRY-02, QRY-04 | Can query workspace and get relevant chunks |
-| 4 | Synthesis Engine | Claude Code integration + context generation | SYN-01 to SYN-05, QRY-03 | Can generate context.md via Claude |
-| 5 | Production Ready | Testing, eval, docs, deployment | All NFRs | Passes all evals, ready for n8n integration |
+- [ ] **Phase 6: Foundation** - API framework, workspace management, health monitoring
+- [ ] **Phase 7: Text Document Processing** - PDF, DOCX, PPTX, XLSX, Markdown, JSON, CSV
+- [ ] **Phase 8: Code File Processing** - 50+ languages with syntax-aware parsing
+- [ ] **Phase 9: Media Processing** - OCR, audio transcription, video extraction
+- [ ] **Phase 10: Web Connector** - Puppeteer scraping with SPA support
+- [ ] **Phase 11: Data Connectors** - YouTube, GitHub, Confluence integration
+- [ ] **Phase 12: Chunking & Embeddings** - Intelligent text processing and local embeddings
+- [ ] **Phase 13: Vector Database** - Convex integration with workspace isolation
+- [ ] **Phase 14: Synthesis Engine** - Claude Code CLI integration with 4 synthesis modes
+- [ ] **Phase 15: Production Readiness** - Tests, evals, documentation, deployment
 
 ---
 
-## Phase 1: Foundation
+## Phase Details
 
-**Goal:** Establish core API infrastructure and workspace management
+### Phase 6: Foundation
+**Goal**: API infrastructure ready to accept documents and manage workspaces
+**Depends on**: Nothing (first phase)
+**Requirements**: API-01, API-02, API-03, API-04, API-05, API-09, WS-01, WS-02, WS-03, WS-04, HLT-01, HLT-02, HLT-03, HLT-04, HLT-05
+**Success Criteria** (what must be TRUE):
+  1. User can create workspace via POST /workspace/create and receive unique slug
+  2. User can list all workspaces via GET /workspaces with metadata
+  3. User can delete workspace via DELETE /workspace/:slug and all associated data removed
+  4. Health endpoint returns system status (Convex connected, Claude Code available, Puppeteer ready)
+  5. API responds to requests with proper error handling and structured JSON responses
+**Plans**: TBD
+**UI hint**: yes
 
-**Requirements:**
-- WS-01: Create workspace
-- WS-02: List workspaces
-- WS-03: Delete workspace
-- WS-04: Get workspace stats
-- HLT-01: Health endpoint
-- HLT-02: Convex connection check
-- HLT-03: Claude Code availability check
-- HLT-04: System metrics
+### Phase 7: Text Document Processing
+**Goal**: System processes 8 core text formats with metadata extraction
+**Depends on**: Phase 6
+**Requirements**: DOC-TXT-01, DOC-TXT-02, DOC-TXT-03, DOC-TXT-04, DOC-TXT-05, DOC-TXT-06, DOC-TXT-07, DOC-TXT-08, DOC-WEB-01, DOC-WEB-02, DOC-WEB-03, DOC-ARCH-01, DOC-ARCH-02, DOC-ARCH-03
+**Success Criteria** (what must be TRUE):
+  1. User can upload PDF file and receive extracted text in <2s for 10-page document
+  2. User can upload DOCX/PPTX/XLSX files and receive structured content (paragraphs, slides, sheets)
+  3. User can upload Markdown/JSON/CSV files and receive parsed content with preserved structure
+  4. User can upload HTML/XML files and receive clean text with extracted metadata
+  5. User can upload ZIP/TAR archives and system recursively processes all contained files (up to 3 levels deep)
+**Plans**: TBD
+**UI hint**: yes
 
-**Success Criteria:**
-1. API server starts and responds to /health
-2. Can create workspace via POST /workspace/create
-3. Workspace appears in GET /workspaces list
-4. Can delete workspace via DELETE /workspace/:id
-5. Convex connection verified in health check
-6. All workspace operations return proper status codes
+### Phase 8: Code File Processing
+**Goal**: System parses 50+ programming languages with syntax awareness
+**Depends on**: Phase 7
+**Requirements**: DOC-CODE-01, DOC-CODE-02, DOC-CODE-03, DOC-CODE-04, DOC-CODE-05, DOC-CODE-06, DOC-CODE-07, DOC-CODE-08, DOC-CODE-09
+**Success Criteria** (what must be TRUE):
+  1. User can upload JavaScript/TypeScript/Python/Java/C++/Go/Rust files and receive syntax-aware parsing
+  2. User can see extracted docstrings, comments, and function signatures from code files
+  3. User can upload code in any of 50+ supported languages and receive proper tokenization
+  4. Code structure is preserved (indentation, formatting, AST elements) in extracted text
+  5. System processes 1000-line code file in <500ms with detected imports and dependencies
+**Plans**: TBD
 
-**Deliverables:**
-- `src/server.js` - Express server
-- `src/api/workspaces.js` - Workspace endpoints
-- `src/api/health.js` - Health check endpoint
-- `src/lib/convex.js` - Convex client wrapper
-- `convex/schema.ts` - Convex schema with workspaces table
-- `.env.example` - Environment configuration template
-- Unit tests for workspace CRUD
+### Phase 9: Media Processing
+**Goal**: System transcribes audio, performs OCR on images, extracts video content
+**Depends on**: Phase 7
+**Requirements**: DOC-MEDIA-01, DOC-MEDIA-02, DOC-MEDIA-03, DOC-MEDIA-04, DOC-MEDIA-05
+**Success Criteria** (what must be TRUE):
+  1. User can upload PNG/JPG/TIFF images with text and receive OCR-extracted content with >90% accuracy
+  2. User can upload MP3/WAV/M4A audio files and receive local Whisper transcription with <10% WER
+  3. User can upload audio with automatic fallback to cloud Whisper API if local fails
+  4. User can upload MP4/AVI/MOV video files and system extracts audio for transcription
+  5. System processes 1-minute audio in <10 seconds locally or video frames for OCR
+**Plans**: TBD
 
-**Technical Notes:**
-- Start simple: in-memory workspace tracking, then add Convex
-- Health endpoint must actually test Convex, not just return OK
-- Use Convex mutations for workspace creation/deletion
-- Implement bearer token auth from day 1
+### Phase 10: Web Connector
+**Goal**: System scrapes websites with JavaScript rendering and robots.txt compliance
+**Depends on**: Phase 6
+**Requirements**: CONN-WEB-01, CONN-WEB-02, CONN-WEB-03, CONN-WEB-04, CONN-WEB-05, CONN-WEB-06, CONN-WEB-07, CONN-WEB-08, CONN-WEB-09, CONN-WEB-10, CONN-GEN-01, CONN-GEN-02, CONN-GEN-03
+**Success Criteria** (what must be TRUE):
+  1. User can provide URL and receive scraped content from static and SPA websites (React, Vue, Angular)
+  2. User can see JavaScript-rendered content with configurable wait strategies (networkidle0, domcontentloaded)
+  3. System respects robots.txt and blocks local IP scraping by default (ALLOW_LOCAL_IPS=false)
+  4. User can crawl sitemaps and perform recursive crawling with depth limits and same-domain enforcement
+  5. System applies rate limiting (default 1 req/sec), custom headers, and proxy support
+**Plans**: TBD
 
-**UI hint**: no
+### Phase 11: Data Connectors
+**Goal**: System extracts content from YouTube, GitHub, and Confluence
+**Depends on**: Phase 10
+**Requirements**: CONN-YT-01, CONN-YT-02, CONN-YT-03, CONN-YT-04, CONN-GH-01, CONN-GH-02, CONN-GH-03, CONN-GH-04, CONN-GH-05, CONN-CONF-01, CONN-CONF-02, CONN-CONF-03, CONN-CONF-04
+**Success Criteria** (what must be TRUE):
+  1. User can provide YouTube URL and receive transcript with timestamps and multi-language support
+  2. User can provide GitHub repo URL and system clones, processes README/docs/code files (public or OAuth for private)
+  3. User can select specific branches and extract issues/PRs via GitHub API
+  4. User can provide Confluence page URL and receive scraped wiki content with preserved hierarchy
+  5. System falls back to Whisper transcription if YouTube transcript unavailable
+**Plans**: TBD
 
----
+### Phase 12: Chunking & Embeddings
+**Goal**: Text is intelligently chunked and embedded locally with zero API cost
+**Depends on**: Phases 7, 8, 9
+**Requirements**: CHUNK-01, CHUNK-02, CHUNK-03, CHUNK-04, CHUNK-05, CHUNK-06, CHUNK-07, CHUNK-08, CHUNK-09, CHUNK-10, CHUNK-11, EMB-01, EMB-02, EMB-03, EMB-04, EMB-05, EMB-06, EMB-07, EMB-08
+**Success Criteria** (what must be TRUE):
+  1. User can configure chunk size (100-5000 tokens) and overlap (0-500 tokens) per workspace
+  2. Text is chunked at sentence boundaries without mid-sentence splits, with paragraph awareness
+  3. Code blocks and markdown structure are preserved during chunking (headings, lists, links)
+  4. System generates 384-dim or 1024-dim embeddings locally using all-MiniLM-L6-v2 or alternative models
+  5. System processes 100+ documents in batch with embedding caching (>80% cache hit rate) and L2 normalization
+**Plans**: TBD
 
-## Phase 2: Embedding Pipeline
+### Phase 13: Vector Database
+**Goal**: Vectors stored in Convex with workspace isolation and fast search
+**Depends on**: Phase 12
+**Requirements**: VDB-01, VDB-02, VDB-03, VDB-04, VDB-05, VDB-06, VDB-07, VDB-08, NFR-SCALE-01, NFR-SCALE-02, NFR-SCALE-03, NFR-SCALE-04
+**Success Criteria** (what must be TRUE):
+  1. User can insert 100+ vectors in batch to workspace in <500ms
+  2. User can search vectors with cosine similarity and receive top-k results in <100ms (p95)
+  3. Workspace isolation enforced (no cross-workspace data leaks, filter by workspace_id)
+  4. User can delete workspace and all associated vectors are removed atomically
+  5. System handles 100k+ vectors per workspace without performance degradation
+**Plans**: TBD
 
-**Goal:** Process documents and store vector embeddings in Convex
+### Phase 14: Synthesis Engine
+**Goal**: Claude Code CLI generates high-quality synthesis with zero API cost
+**Depends on**: Phase 13
+**Requirements**: SYN-01, SYN-02, SYN-03, SYN-04, SYN-05, SYN-06, SYN-07, SYN-08, SYN-09, SYN-10, API-06, API-07, API-08, NFR-PERF-03
+**Success Criteria** (what must be TRUE):
+  1. User can upload document via POST /workspace/:slug/upload and receive processing status
+  2. User can scrape URL via POST /workspace/:slug/scrape with connector type selection
+  3. User can query workspace via POST /workspace/:slug/query and receive synthesis
+  4. User can select synthesis mode (summarize, FAQ, insights, briefing, custom)
+  5. Synthesis completes in <30s for 10k tokens context (p95) with markdown output and source citations
+**Plans**: TBD
 
-**Requirements:**
-- IDX-01: Index single file
-- IDX-02: Index directory
-- IDX-03: Chunk documents
-- IDX-04: Generate embeddings
-- IDX-05: Store vectors in Convex
-- IDX-06: Return indexing status
-
-**Success Criteria:**
-1. Can upload a .md file and get chunks back
-2. Chunks preserve sentence boundaries (no mid-sentence splits)
-3. Embeddings are 384-dimensional vectors
-4. Vectors stored in Convex with workspace_id filter
-5. Can index entire directory with mixed file types
-6. Indexing errors reported (don't crash on bad files)
-
-**Deliverables:**
-- `src/api/indexing.js` - Indexing endpoints
-- `src/lib/embedder.js` - Python subprocess wrapper
-- `src/lib/chunker.js` - Document chunking logic
-- `src/lib/document-processor.js` - File reading (md, txt, pdf)
-- `python/embed.py` - sentence-transformers embedding script
-- `convex/schema.ts` - Add vectors table with vector index
-- `convex/vectors.ts` - Vector CRUD operations
-- Integration tests for full indexing pipeline
-
-**Technical Notes:**
-- Use Python subprocess for embeddings (sentence-transformers)
-- PDF support: pypdf for text extraction (text-based PDFs only)
-- Chunking: max 1000 chars, break on sentence boundaries
-- Batch inserts to Convex (don't insert one-by-one)
-- Return detailed status: {chunks_indexed, vectors_created, errors[]}
-
-**UI hint**: no
-
----
-
-## Phase 3: Retrieval Engine
-
-**Goal:** Query workspaces and retrieve relevant chunks via vector search
-
-**Requirements:**
-- QRY-01: Query with natural language
-- QRY-02: Return chunks with sources
-- QRY-04: Similarity threshold filtering
-
-**Success Criteria:**
-1. Can query workspace with natural language question
-2. Returns top 10 most relevant chunks
-3. Results include source file paths
-4. Similarity scores included in response
-5. Threshold parameter filters low-relevance results
-6. Query returns empty array if no matches (not error)
-
-**Deliverables:**
-- `src/api/query.js` - Query endpoints
-- `src/lib/retriever.js` - Vector search wrapper
-- `convex/vectors.ts` - Add vector search query
-- Integration tests for query accuracy
-
-**Technical Notes:**
-- Embed the query using same embedder as documents
-- Use Convex vectorSearch with workspace_id filter
-- Return format: {chunks: [{text, source, score}]}
-- Default threshold: 0.25 (configurable via param)
-- No LLM involvement yet (just retrieval)
-
-**UI hint**: no
-
----
-
-## Phase 4: Synthesis Engine
-
-**Goal:** Generate structured context documents using Claude Code CLI
-
-**Requirements:**
-- SYN-01: Retrieve relevant chunks
-- SYN-02: Pass to Claude Code CLI
-- SYN-03: Generate structured context.md
-- SYN-04: Save to file system
-- SYN-05: Complete in <30 seconds
-- QRY-03: Synthesize mode for queries
-
-**Success Criteria:**
-1. Can trigger synthesis via POST /workspace/:id/synthesize
-2. Claude Code CLI called successfully with structured prompt
-3. context.md file created with all required sections
-4. Synthesis completes in <30 seconds
-5. Query endpoint supports mode="synthesize" (not just retrieve)
-6. Handles Claude Code unavailable gracefully (error, not crash)
-
-**Deliverables:**
-- `src/api/synthesis.js` - Synthesis endpoint
-- `src/lib/claude.js` - Claude Code CLI wrapper
-- `src/lib/prompt-builder.js` - Build synthesis prompts
-- Integration tests for synthesis quality
-- Update query.js to support synthesis mode
-
-**Technical Notes:**
-- Claude Code call: `echo "[prompt]" | claude --print --no-stream`
-- Prompt template: Include chunks, ask for structured output
-- Sections: Executive Summary, Key Findings, Analysis, Next Steps, Sources
-- File path: `/root/Research/{workspace_id}/context.md`
-- Create directory if it doesn't exist
-- Timeout after 60 seconds (fail gracefully)
-- Query synthesis mode: embed question → search → pass to Claude
-
-**UI hint**: no
+### Phase 15: Production Readiness
+**Goal**: System passes all tests, meets performance targets, has comprehensive documentation
+**Depends on**: Phases 6 through 14
+**Requirements**: NFR-PERF-01, NFR-PERF-02, NFR-PERF-04, NFR-PERF-05, NFR-SEC-01, NFR-SEC-02, NFR-SEC-03, NFR-SEC-04, NFR-REL-01, NFR-REL-02, NFR-REL-03, NFR-REL-04, NFR-MAINT-01, NFR-MAINT-02, NFR-MAINT-03, NFR-MAINT-04
+**Success Criteria** (what must be TRUE):
+  1. All unit tests pass (100% coverage for file processors, connectors, chunking, embeddings)
+  2. All integration tests pass (end-to-end upload → vector → synthesis pipelines work)
+  3. Quality eval score >80% (blind test across 5 real-world scenarios from EVAL.md)
+  4. Performance targets met (PDF <2s, search <100ms, synthesis <30s, 10 concurrent uploads)
+  5. Code size <5000 LOC, test coverage >80%, comprehensive README and API docs, deployment guide ready
+**Plans**: TBD
+**UI hint**: yes
 
 ---
 
-## Phase 5: Production Ready
+## Progress Table
 
-**Goal:** Testing, evaluation, documentation, and deployment readiness
-
-**Requirements:**
-- All NFRs (performance, reliability, security, maintainability)
-
-**Success Criteria:**
-1. 100% unit test coverage on core modules
-2. 100% integration test pass rate (all 10 scenarios)
-3. Quality eval >80% (5 blind test scenarios)
-4. 3/3 real-world IRCA workflows complete successfully
-5. Performance benchmarks met (<30s synthesis, <500ms search)
-6. Security tests pass (auth, isolation, input validation)
-7. Documentation complete (README, API docs, n8n examples)
-8. Code <1000 LOC (excluding tests)
-9. Linter 0 errors
-
-**Deliverables:**
-- `tests/unit/` - Complete unit test suite
-- `tests/integration/` - Integration test suite
-- `tests/eval/` - Quality evaluation suite
-- `README.md` - Setup and usage guide
-- `API.md` - Complete API documentation
-- `examples/n8n/` - Example workflows
-- Performance benchmarks
-- Security audit report
-- Deployment guide (PM2, systemd)
-
-**Technical Notes:**
-- Use EVAL.md spec for quality evaluation
-- Create eval dataset (5 scenarios with ground truth)
-- Blind eval: run without seeing expected outputs
-- Real-world tests: Polymarket research, docs synthesis, multi-source
-- Performance: measure with real workloads (not toy data)
-- Document all environment variables
-- Provide Docker option for easier deployment
-
-**UI hint**: no
+| Phase | Plans Complete | Status | Completed |
+|-------|----------------|--------|-----------|
+| 6. Foundation | 0/? | Not started | - |
+| 7. Text Document Processing | 0/? | Not started | - |
+| 8. Code File Processing | 0/? | Not started | - |
+| 9. Media Processing | 0/? | Not started | - |
+| 10. Web Connector | 0/? | Not started | - |
+| 11. Data Connectors | 0/? | Not started | - |
+| 12. Chunking & Embeddings | 0/? | Not started | - |
+| 13. Vector Database | 0/? | Not started | - |
+| 14. Synthesis Engine | 0/? | Not started | - |
+| 15. Production Readiness | 0/? | Not started | - |
 
 ---
 
-## Requirement Traceability
+## Notes
 
-| Requirement | Phase | Status |
-|-------------|-------|--------|
-| **Workspace Management** |
-| WS-01 | Phase 1 | Pending |
-| WS-02 | Phase 1 | Pending |
-| WS-03 | Phase 1 | Pending |
-| WS-04 | Phase 1 | Pending |
-| **Document Indexing** |
-| IDX-01 | Phase 2 | Pending |
-| IDX-02 | Phase 2 | Pending |
-| IDX-03 | Phase 2 | Pending |
-| IDX-04 | Phase 2 | Pending |
-| IDX-05 | Phase 2 | Pending |
-| IDX-06 | Phase 2 | Pending |
-| **Context Synthesis** |
-| SYN-01 | Phase 4 | Pending |
-| SYN-02 | Phase 4 | Pending |
-| SYN-03 | Phase 4 | Pending |
-| SYN-04 | Phase 4 | Pending |
-| SYN-05 | Phase 4 | Pending |
-| **Query Interface** |
-| QRY-01 | Phase 3 | Pending |
-| QRY-02 | Phase 3 | Pending |
-| QRY-03 | Phase 4 | Pending |
-| QRY-04 | Phase 3 | Pending |
-| **System Health** |
-| HLT-01 | Phase 1 | Pending |
-| HLT-02 | Phase 1 | Pending |
-| HLT-03 | Phase 1 | Pending |
-| HLT-04 | Phase 1 | Pending |
-| **Non-Functional** |
-| All NFRs | Phase 5 | Pending |
+**Granularity:** Coarse (from config.json)
+**Phase numbering:** Continues from previous milestone (last phase was 5, starting at 6)
+**Total requirements:** 120+ mapped across 10 phases
 
-**Coverage:** 24/24 v1 requirements mapped ✓
+**Key architectural flows:**
+1. **Document Upload:** Phase 7/8/9 (processors) → Phase 12 (chunking/embeddings) → Phase 13 (vector storage)
+2. **Web Scraping:** Phase 10/11 (connectors) → Phase 12 (chunking/embeddings) → Phase 13 (vector storage)
+3. **Synthesis:** Phase 13 (vectors) → Phase 14 (Claude Code CLI) → structured output
+4. **Foundation:** Phase 6 (API + workspaces) supports all other phases
+
+**Critical path:**
+- Phase 6 (Foundation) unlocks all document processing and connector phases
+- Phases 7, 8, 9 (processors) and Phases 10, 11 (connectors) run in parallel once Phase 6 complete
+- Phase 12 (chunking/embeddings) required for Phase 13 (vector DB)
+- Phase 13 (vectors) required for Phase 14 (synthesis)
+- Phase 15 (production) validates entire system
+
+**Parallelization opportunities:**
+- Phases 7, 8, 9 can be developed concurrently (different processors)
+- Phases 10, 11 can be developed concurrently (different connectors)
+- Phase 12 can start as soon as any processor (7, 8, or 9) completes
+
+**UI phases detected:**
+- Phase 6: Dashboard interface for workspace management, health monitoring
+- Phase 7: Document upload interface with format selection
+- Phase 15: Production dashboard with metrics, logs, performance monitoring
 
 ---
 
-## Dependencies
-
-### Phase Dependencies
-- Phase 2 depends on Phase 1 (needs workspace management)
-- Phase 3 depends on Phase 2 (needs embeddings to search)
-- Phase 4 depends on Phase 3 (needs retrieval for synthesis)
-- Phase 5 depends on Phases 1-4 (tests everything)
-
-### External Dependencies
-- Convex project deployed (`optimistic-pig-632` or new)
-- Claude Code CLI installed and accessible
-- Python 3.13+ with sentence-transformers
-- Node.js 18+
-
----
-
-## Risk Mitigation
-
-| Risk | Impact | Mitigation |
-|------|--------|------------|
-| Claude Code CLI unreliable | High | Fallback to mock mode for testing, document workarounds |
-| Convex vector search performance | Medium | Benchmark early (Phase 3), optimize queries, consider pagination |
-| Embedding quality insufficient | Medium | Run quality eval early (Phase 5), swap models if needed |
-| <1000 LOC constraint too tight | Low | Ruthlessly cut features, extract to utils/ if needed |
-
----
-
-## Success Metrics
-
-### Velocity
-- Target: 1 phase per 2-3 days
-- Total: 10-15 days to v1.0
-
-### Quality
-- Unit tests: 100% pass rate
-- Integration tests: 100% pass rate
-- Quality eval: >80% score
-- Real-world tests: 3/3 pass
-
-### Performance
-- Synthesis: <30s (measured)
-- Search: <500ms (measured)
-- API: <100ms (non-synthesis endpoints)
-
----
-
-*Roadmap evolves through phase completion. See PROJECT.md Evolution section for update protocol.*
+*Roadmap created: 2026-03-27*
+*Next step: `/gsd:plan-phase 6`*
